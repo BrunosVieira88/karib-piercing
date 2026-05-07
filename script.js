@@ -18,7 +18,7 @@ const observer = new IntersectionObserver(function (entries) {
 
 // Add reveal class to elements
 window.addEventListener('load', () => {
-    const elements = document.querySelectorAll('.gallery-item, .service-card, .testimonial-card, .stat-card');
+    const elements = document.querySelectorAll('.gallery-item, .service-card, .testimonial-card, .stat-card, .jewelry-showcase');
     elements.forEach(el => {
         el.classList.add('reveal');
         observer.observe(el);
@@ -32,7 +32,11 @@ window.addEventListener('load', () => {
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-hamburger.addEventListener('click', () => {
+function isMobileNav() {
+    return window.matchMedia('(max-width: 768px)').matches;
+}
+
+hamburger?.addEventListener('click', () => {
     navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
     hamburger.classList.toggle('active');
 });
@@ -40,21 +44,42 @@ hamburger.addEventListener('click', () => {
 // Close menu when link is clicked
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-        navMenu.style.display = 'none';
-        hamburger.classList.remove('active');
+        if (isMobileNav()) {
+            navMenu.style.display = 'none';
+            hamburger.classList.remove('active');
+        }
     });
+});
+
+window.addEventListener('resize', () => {
+    if (!isMobileNav()) {
+        navMenu.style.display = 'flex';
+        hamburger?.classList.remove('active');
+    } else {
+        navMenu.style.display = 'none';
+    }
 });
 
 // ============================================================
 // SMOOTH SCROLL FOR NAVIGATION LINKS
 // ============================================================
 
+function scrollToSection(target) {
+    const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight - 10;
+
+    window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+    });
+}
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
+            scrollToSection(target);
         }
     });
 });
@@ -65,8 +90,79 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 document.querySelector('.cta-button').addEventListener('click', () => {
     const bookingSection = document.querySelector('#contact');
-    bookingSection.scrollIntoView({ behavior: 'smooth' });
+    scrollToSection(bookingSection);
 });
+
+// ============================================================
+// JEWELRY CAROUSEL
+// ============================================================
+
+const jewelryImages = [
+    'img/joias/img01.png',
+    'img/joias/img02.png',
+    'img/joias/img03.png',
+    'img/joias/img04.png',
+    'img/joias/img05.png',
+    'img/joias/img06.png',
+    'img/joias/img07.png'
+];
+
+const carouselPrevImage = document.querySelector('.carousel-image-prev');
+const carouselMainImage = document.querySelector('.carousel-image-main');
+const carouselNextImage = document.querySelector('.carousel-image-next');
+const carouselPrevButton = document.querySelector('.carousel-btn-prev');
+const carouselNextButton = document.querySelector('.carousel-btn-next');
+const carouselDots = document.querySelector('.carousel-dots');
+let activeJewelryIndex = 0;
+
+function getCarouselIndex(index) {
+    return (index + jewelryImages.length) % jewelryImages.length;
+}
+
+function renderJewelryCarousel() {
+    if (!carouselPrevImage || !carouselMainImage || !carouselNextImage || !carouselDots) {
+        return;
+    }
+
+    const prevIndex = getCarouselIndex(activeJewelryIndex - 1);
+    const nextIndex = getCarouselIndex(activeJewelryIndex + 1);
+
+    carouselPrevImage.src = jewelryImages[prevIndex];
+    carouselMainImage.src = jewelryImages[activeJewelryIndex];
+    carouselNextImage.src = jewelryImages[nextIndex];
+    carouselMainImage.alt = `Joia para piercing em destaque ${activeJewelryIndex + 1}`;
+
+    carouselDots.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeJewelryIndex);
+        dot.setAttribute('aria-current', index === activeJewelryIndex ? 'true' : 'false');
+    });
+}
+
+if (carouselDots) {
+    jewelryImages.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel-dot';
+        dot.setAttribute('aria-label', `Mostrar joia ${index + 1}`);
+        dot.addEventListener('click', () => {
+            activeJewelryIndex = index;
+            renderJewelryCarousel();
+        });
+        carouselDots.appendChild(dot);
+    });
+}
+
+carouselPrevButton?.addEventListener('click', () => {
+    activeJewelryIndex = getCarouselIndex(activeJewelryIndex - 1);
+    renderJewelryCarousel();
+});
+
+carouselNextButton?.addEventListener('click', () => {
+    activeJewelryIndex = getCarouselIndex(activeJewelryIndex + 1);
+    renderJewelryCarousel();
+});
+
+renderJewelryCarousel();
 
 // ============================================================
 // FORM HANDLING
@@ -474,6 +570,111 @@ if (formInputs.telefone) {
     });
 }
 
+// Piercing type image preview
+const piercingPreviewImage = document.getElementById('piercingPreviewImage');
+const piercingPreviewTitle = document.getElementById('piercingPreviewTitle');
+
+function commonsImage(fileName) {
+    return `https://commons.wikimedia.org/wiki/Special:Redirect/file/${encodeURIComponent(fileName)}?width=900`;
+}
+
+const piercingPreviewImages = {
+    default: commonsImage('Captive bead ring.jpg'),
+    lobe: commonsImage('Earlobe Piercing.jpg'),
+    helix: commonsImage('Helix piercing.jpg'),
+    conch: commonsImage('Conch-piercing.jpg'),
+    tragus: commonsImage('Tragus Piercing.jpg'),
+    daith: commonsImage('Daith Piercing 2.jpg'),
+    rook: commonsImage('Rook Piercing.jpg'),
+    transversal: commonsImage('Industrial piercing.jpg'),
+    nostril: commonsImage('Nostril piercing.jpg'),
+    septo: commonsImage('Septumpiercing.jpg'),
+    bridge: commonsImage('Bridge piercing.jpg'),
+    mouth: commonsImage('Labret Piercing.jpg'),
+    verticalLabret: commonsImage('Vertical labret.png'),
+    medusa: commonsImage('Medusa Piercing.jpg'),
+    monroe: commonsImage('Monroe piercing.jpg'),
+    eyebrow: commonsImage('Eyebrow piercing.jpg'),
+    navel: commonsImage('My navel piercing.png'),
+    jewelry: commonsImage('Collection of body piercing jewellery.jpg')
+};
+
+const piercingPreviewByType = {
+    'Lóbulo': piercingPreviewImages.lobe,
+    'Helix': piercingPreviewImages.helix,
+    'Forward Helix': piercingPreviewImages.helix,
+    'Double/Triple Helix': piercingPreviewImages.helix,
+    'Flat': piercingPreviewImages.helix,
+    'Conch': piercingPreviewImages.conch,
+    'Tragus': piercingPreviewImages.tragus,
+    'Anti-tragus': piercingPreviewImages.tragus,
+    'Daith': piercingPreviewImages.daith,
+    'Rook': piercingPreviewImages.rook,
+    'Snug': piercingPreviewImages.rook,
+    'Orbital': piercingPreviewImages.conch,
+    'Transversal': piercingPreviewImages.transversal,
+    'Nostril': piercingPreviewImages.nostril,
+    'Septo': piercingPreviewImages.septo,
+    'Bridge': piercingPreviewImages.bridge,
+    'Austin Bar': piercingPreviewImages.nostril,
+    'Nasallang': piercingPreviewImages.nostril,
+    'High Nostril': piercingPreviewImages.nostril,
+    'Labret': piercingPreviewImages.mouth,
+    'Side Labret': piercingPreviewImages.mouth,
+    'Vertical Labret': piercingPreviewImages.verticalLabret,
+    'Medusa (Philtrum)': piercingPreviewImages.medusa,
+    'Monroe': piercingPreviewImages.monroe,
+    'Madonna': piercingPreviewImages.monroe,
+    'Snake Bites': piercingPreviewImages.mouth,
+    'Spider Bites': piercingPreviewImages.mouth,
+    'Angel Bites': piercingPreviewImages.monroe,
+    'Cyber Bites': piercingPreviewImages.mouth,
+    'Dolphin Bites': piercingPreviewImages.mouth,
+    'Dahlia': piercingPreviewImages.mouth,
+    'Jestrum (vertical medusa)': piercingPreviewImages.monroe,
+    'Ashley': piercingPreviewImages.mouth,
+    'Sobrancelha': piercingPreviewImages.eyebrow,
+    'Anti-sobrancelha': piercingPreviewImages.eyebrow,
+    'Cheek': piercingPreviewImages.eyebrow,
+    'Third Eye': piercingPreviewImages.eyebrow,
+    'Umbigo': piercingPreviewImages.navel,
+    'Umbigo inferior': piercingPreviewImages.navel,
+    'Surface no abdômen': piercingPreviewImages.navel,
+    'Microdermal': piercingPreviewImages.jewelry,
+    'Mamilo horizontal': piercingPreviewImages.jewelry,
+    'Mamilo vertical': piercingPreviewImages.jewelry,
+    'Mamilo diagonal': piercingPreviewImages.jewelry,
+    'Mamilo múltiplo': piercingPreviewImages.jewelry,
+    'Christina': piercingPreviewImages.jewelry,
+    'Vertical Hood (VCH)': piercingPreviewImages.jewelry,
+    'Horizontal Hood (HCH)': piercingPreviewImages.jewelry,
+    'Inner Labia': piercingPreviewImages.jewelry,
+    'Outer Labia': piercingPreviewImages.jewelry,
+    'Fourchette': piercingPreviewImages.jewelry,
+    'Princess Albertina': piercingPreviewImages.jewelry,
+    'Prince Albert': piercingPreviewImages.jewelry,
+    'Reverse Prince Albert': piercingPreviewImages.jewelry,
+    'Frenum': piercingPreviewImages.jewelry,
+    'Lorum': piercingPreviewImages.jewelry,
+    'Hafada': piercingPreviewImages.jewelry,
+    'Apadravya': piercingPreviewImages.jewelry,
+    'Ampallang': piercingPreviewImages.jewelry,
+    'Dydoe': piercingPreviewImages.jewelry
+};
+
+if (formInputs.tipo && piercingPreviewImage && piercingPreviewTitle) {
+    function updatePiercingPreview() {
+        const selectedType = formInputs.tipo.value;
+
+        piercingPreviewTitle.textContent = selectedType || 'Selecione uma opção';
+        piercingPreviewImage.src = piercingPreviewByType[selectedType] || piercingPreviewImages.default;
+        piercingPreviewImage.alt = selectedType ? `Prévia de ${selectedType}` : 'Prévia de piercing';
+    }
+
+    formInputs.tipo.addEventListener('input', updatePiercingPreview);
+    formInputs.tipo.addEventListener('change', updatePiercingPreview);
+}
+
 // ============================================================
 // ACCESSIBILITY IMPROVEMENTS
 // ============================================================
@@ -489,4 +690,4 @@ document.addEventListener('mousedown', () => {
     document.body.classList.remove('keyboard-nav');
 });
 
-console.log('% cPIERCING Studio - Landing Page Carregada com Sucesso!', 'color: #8b2e5f; font-size: 16px; font-weight: bold');
+console.log('% cKARIB PIERCING Studio - Landing Page Carregada com Sucesso!', 'color: #8b2e5f; font-size: 16px; font-weight: bold');

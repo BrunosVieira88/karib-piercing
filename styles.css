@@ -22,6 +22,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 88px;
 }
 
 body {
@@ -394,6 +395,170 @@ body {
     font-weight: 600;
 }
 
+/* Jewelry Section */
+
+.jewelry-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
+}
+
+.jewelry-showcase {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+    gap: 3rem;
+    align-items: center;
+}
+
+.jewelry-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jewelry-copy h3 {
+    color: var(--dark);
+    font-size: 2.1rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.jewelry-copy p {
+    color: #555555;
+    margin-bottom: 1.5rem;
+}
+
+.material-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.material-item {
+    padding: 1rem;
+    border-left: 3px solid var(--primary);
+    background: #ffffff;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+}
+
+.material-item strong {
+    display: block;
+    color: var(--primary);
+    margin-bottom: 0.2rem;
+}
+
+.material-item span {
+    color: #555555;
+    font-size: 0.95rem;
+}
+
+.jewelry-carousel {
+    position: relative;
+    min-height: 520px;
+    display: grid;
+    align-items: center;
+}
+
+.carousel-stage {
+    position: relative;
+    height: 460px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.carousel-image {
+    position: absolute;
+    width: min(64%, 360px);
+    height: 430px;
+    object-fit: contain;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 18px 45px rgba(26, 26, 26, 0.16);
+    transition: transform 0.35s ease, opacity 0.35s ease, filter 0.35s ease;
+}
+
+.carousel-image-main {
+    z-index: 3;
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+.carousel-image-prev,
+.carousel-image-next {
+    z-index: 2;
+    opacity: 0.42;
+    filter: blur(1.2px) saturate(0.85);
+}
+
+.carousel-image-prev {
+    transform: translateX(-52%) scale(0.78) rotate(-4deg);
+}
+
+.carousel-image-next {
+    transform: translateX(52%) scale(0.78) rotate(4deg);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #ffffff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transform: translateY(-50%);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background: #6f244c;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-btn-prev {
+    left: 0;
+}
+
+.carousel-btn-next {
+    right: 0;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.carousel-dot {
+    width: 9px;
+    height: 9px;
+    border: 0;
+    border-radius: 50%;
+    background: #d7c2d0;
+    cursor: pointer;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.carousel-dot.active {
+    width: 28px;
+    border-radius: 999px;
+    background: var(--primary);
+}
+
 /* Services Section */
 
 .services-section {
@@ -573,16 +738,21 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.5rem;
 }
 
 .testimonial-card {
     background: white;
-    padding: 2rem;
+    padding: 0;
     border-radius: 15px;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
 }
 
 .testimonial-card:hover {
@@ -597,6 +767,16 @@ body {
 
 .stars i {
     margin-right: 0.2rem;
+}
+
+.testimonial-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center 43%;
+    transform: scale(1.35);
+    border-radius: 15px;
 }
 
 .testimonial-card p {
@@ -650,6 +830,38 @@ body {
 
 .form-group textarea {
     resize: vertical;
+}
+
+.piercing-preview {
+    margin-top: 0.85rem;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--gray);
+}
+
+.piercing-preview img {
+    width: 110px;
+    aspect-ratio: 1 / 1;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.piercing-preview span {
+    display: block;
+    color: #666666;
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+}
+
+.piercing-preview strong {
+    color: var(--primary);
+    font-size: 1rem;
 }
 
 .booking-form .btn {
@@ -760,7 +972,16 @@ body {
 
 @media (max-width: 768px) {
     .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        display: none;
+        flex-direction: column;
         gap: 1rem;
+        padding: 1rem 2rem;
+        background: rgba(255, 255, 255, 0.98);
+        border-bottom: 1px solid var(--border);
     }
 
     .hamburger {
@@ -780,9 +1001,39 @@ body {
     }
 
     .gallery-grid,
+    .jewelry-showcase,
     .services-grid,
     .testimonials-grid {
         grid-template-columns: 1fr;
+    }
+
+    .jewelry-showcase {
+        gap: 2rem;
+    }
+
+    .jewelry-copy h3 {
+        font-size: 1.7rem;
+    }
+
+    .jewelry-carousel {
+        min-height: 430px;
+    }
+
+    .carousel-stage {
+        height: 370px;
+    }
+
+    .carousel-image {
+        width: min(70%, 300px);
+        height: 340px;
+    }
+
+    .carousel-btn-prev {
+        left: 0.25rem;
+    }
+
+    .carousel-btn-next {
+        right: 0.25rem;
     }
 
     .about-content {
@@ -828,8 +1079,20 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .carousel-image {
+        width: min(76%, 260px);
+    }
+
     .booking-form {
         max-width: 100%;
+    }
+
+    .piercing-preview {
+        grid-template-columns: 86px 1fr;
+    }
+
+    .piercing-preview img {
+        width: 86px;
     }
 }
 

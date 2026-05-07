@@ -208,7 +208,7 @@ A página é responsiva em:
 Para melhorar o SEO, atualize em `index.html`:
 
 ```html
-<title>PIERCING - Body Piercing Studio Profissional</title>
+<title>PIERCING - Body KARIB PIERCING Studio Profissional</title>
 <meta name="description" content="Studio de body piercing feminino com profissionais certificados">
 <meta name="keywords" content="body piercing, piercing feminino, estúdio piercing">
 ```
